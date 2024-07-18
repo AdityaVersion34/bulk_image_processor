@@ -145,9 +145,11 @@ def proc_executor(src_path, split_no) -> None:
     # splitting images into temp directory
     pathified_src_path = Path(src_path)
     temp_split_path = pathified_src_path / "temp_splits"    # this is a path object, not string
+    processed_temp_split_path = pathified_src_path / "processed"
     img_dim = img_splitter(img_path=src_path, splits_per_dim=split_no, dest_path=str(temp_split_path))
 
     # insert code to run the model here
+
 
     # stitching images back into larger images
     out_stitched_path = pathified_src_path / "out"  # another path object
