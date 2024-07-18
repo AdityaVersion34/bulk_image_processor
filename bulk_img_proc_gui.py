@@ -1,7 +1,36 @@
 import tkinter as tk
-from tkinter.filedialog import askopenfilename, askdirectory
+from tkinter.filedialog import askdirectory
+
+from proc_executor import *
 
 # This file contains python code for the main GUI of the bulk image processor
+
+def processing_handler() -> None:
+    '''
+    This function is triggered on click of the run button. Calls helper function that actually handles the processing.
+    This function itself handles the status bar and out dir printing
+
+    :return: None
+    '''
+
+    # getting relevant data
+    src_path = lbl_inp_dir_overview_data["text"]
+    split_no = lbl_split_no_overview_data["text"]
+
+    # asserting data format
+    if src_path == "":
+        proc_run_err_msg["text"] = "Please enter a valid input directory path"
+        return
+
+    if split_no == "":
+        proc_run_err_msg["text"] = "Please enter a valid number of image splits"
+        return
+
+    split_no_int = int(split_no)
+    proc_run_err_msg["text"] = ""
+
+    proc_executor(src_path=src_path, split_no=split_no_int)
+    return
 
 def get_dir(*destinations) -> None:
     '''
@@ -117,7 +146,7 @@ lbl_get_preproc_info = tk.Label(master=frm_get_splits, bg="white", relief=tk.SUN
 
 lbl_get_splits = tk.Label(master=frm_get_splits, bg="white", border=3, text="Enter the number of image splits per dimension: ")
 ent_get_splits = tk.Entry(master=frm_get_splits, bg="white", width=7)
-lbl_split_err_msg = tk.Label(master=frm_get_splits, bg="white", border=3, text="")
+lbl_split_err_msg = tk.Label(master=frm_get_splits, bg="white", fg="red", border=3, text="")
 btn_split_confirmer = tk.Button(master=frm_get_splits, text="Confirm",
                                 command= lambda: confirm_button(ent_get_splits, confirm_pos_int, lbl_split_err_msg, lbl_split_no_overview_data))
 
@@ -146,7 +175,8 @@ lbl_model_overview_data = tk.Label(master=frm_run_model, bg="white", text="VGG16
 lbl_inp_dir_overview_data = tk.Label(master=frm_run_model, bg="white", text="")
 lbl_split_no_overview_data = tk.Label(master=frm_run_model, bg="white", text="")
 
-btn_proc_run = tk.Button(master=frm_run_model, bg="limegreen", text="Run")
+btn_proc_run = tk.Button(master=frm_run_model, bg="limegreen", text="Run", command=processing_handler)
+proc_run_err_msg = tk.Label(master=frm_run_model, bg="white", fg="red", text="")
 
 # adding to grid
 lbl_run_model_info.grid(row=0, column=0, ipadx=5, ipady=5, padx=2, pady=2, sticky="nw")
@@ -161,7 +191,26 @@ lbl_inp_dir_overview_data.grid(row=3, column=1, padx=2, pady=2, sticky="nw")
 lbl_split_no_overview_data.grid(row=4, column=1, padx=2, pady=2, sticky="nw")
 
 btn_proc_run.grid(row=5, column=2, ipadx=10, ipady=4, padx=2, pady=2, sticky="nw")
+proc_run_err_msg.grid(row=5, column=1, padx=2, pady=2, sticky="w")
 
 # ===========================================================
+# RESULTS PANEL
+
+lbl_results_panel_info = tk.Label(master=frm_result_dir, bg="white", relief=tk.SUNKEN, text="4) Status and Results")
+
+lbl_results_status_heading = tk.Label(master=frm_result_dir, bg="white", text="Status: ")
+lbl_results_status_data = tk.Label(master=frm_result_dir, bg="white", text="<===== Status Bar here =====>")
+
+lbl_out_dir_heading = tk.Label(master=frm_result_dir, bg="white", text="Output directory: ")
+lbl_out_dir_data = tk.Label(master=frm_result_dir, bg="white", text="out/dir/here")
+
+# adding to grid
+lbl_results_panel_info.grid(row=0, column=0, ipadx=5, ipady=5, padx=2, pady=2, sticky="nw")
+
+lbl_results_status_heading.grid(row=1, column=0, padx=2, pady=2, sticky="nw")
+lbl_results_status_data.grid(row=1, column=1, padx=2, pady=2, sticky="nw")
+
+lbl_out_dir_heading.grid(row=2, column=0, padx=2, pady=2, sticky="nw")
+lbl_out_dir_data.grid(row=2, column=1, padx=2, pady=2, sticky="nw")
 
 base_win.mainloop()
