@@ -2,6 +2,8 @@ from pathlib import Path
 import os
 from PIL import Image
 import shutil
+from vgg16_khanhha_related.gui_to_model_exec_layer import exec_inference_unet
+import re
 
 '''
 This module deals with the image processing execution. It handles the splitting, segmenting, and stitching of the images
@@ -65,7 +67,7 @@ def img_splitter(img_path, splits_per_dim, dest_path) -> tuple:
                     sub_img = img.crop((left, top, right, bottom))
                     #saving the sub image
                     #hardcoded to jpg for now
-                    sub_filename = f"{os.path.splitext(filename)[0]}_{i}_{j}.jpg"
+                    sub_filename = f"{os.path.splitext(filename)[0]}_" + "{:03d}_".format(i) + "{:03d}.jpg".format(j)
                     sub_img.save(os.path.join(dest_path, sub_filename))
 
             img.close()
@@ -101,7 +103,7 @@ def img_stitcher(img_path, splits_per_dim, dest_path, src_dim) -> None:
 
     #making a list of the image paths
     img_list = [img for img in os.listdir(img_path) if (img.endswith('.jpg') or img.endswith('.JPG'))]
-    print(f"{len(img_list)} images")
+    # print(f"{len(img_list)} images")
 
     if len(img_list) == 0:
         return
@@ -114,6 +116,15 @@ def img_stitcher(img_path, splits_per_dim, dest_path, src_dim) -> None:
         # getting the dimensions of an image (assuming they are all the same size
         sample_img = Image.open(os.path.join(img_path, img_list[img_set*(splits_per_dim**2)]))
         mini_width, mini_height = sample_img.size
+
+        match = re.match(r'^(.*?)_\d{3}_\d{3}\.jpg$', img_list[img_set*(splits_per_dim**2)])
+        if match:
+            out_img_name = match.group(1)
+        else:
+            out_img_name = f"stitched_no_{img_set}"
+
+        out_img_name += ".jpg"
+
         sample_img.close()
 
         #creating canvas mega image
@@ -122,6 +133,7 @@ def img_stitcher(img_path, splits_per_dim, dest_path, src_dim) -> None:
         #iterating and stitching images
         for i in range(splits_per_dim**2):
             img = img_list[i + img_list_offset]
+            # print(img)
             curr_img_path = os.path.join(img_path, img)
             curr_img = Image.open(curr_img_path)
 
@@ -131,7 +143,7 @@ def img_stitcher(img_path, splits_per_dim, dest_path, src_dim) -> None:
             mega_img.paste(curr_img, (col * mini_width, row * mini_height))
             curr_img.close()
 
-        mega_img.save(os.path.join(dest_path, f"stitched_no_{img_set}.jpg"))
+        mega_img.save(os.path.join(dest_path, out_img_name))
         mega_img.close()
 
 def proc_executor(src_path, split_no) -> None:
@@ -149,14 +161,16 @@ def proc_executor(src_path, split_no) -> None:
     img_dim = img_splitter(img_path=src_path, splits_per_dim=split_no, dest_path=str(temp_split_path))
 
     # insert code to run the model here
-
+    exec_inference_unet(img_dir=str(temp_split_path), model_path="./vgg16_khanhha_Related/models/model_unet_vgg_16_best.pt",
+                        model_type="vgg16", out_pred_dir=str(processed_temp_split_path))
 
     # stitching images back into larger images
     out_stitched_path = pathified_src_path / "out"  # another path object
 
-    img_stitcher(img_path=str(temp_split_path), splits_per_dim=split_no, dest_path=str(out_stitched_path), src_dim=img_dim)
+    img_stitcher(img_path=str(processed_temp_split_path), splits_per_dim=split_no, dest_path=str(out_stitched_path), src_dim=img_dim)
 
     shutil.rmtree(str(temp_split_path))
+    shutil.rmtree(str(processed_temp_split_path))
 
 if __name__ == '__main__':
-    proc_executor("C:/Users/Aditya/senseimage_stuff/test", 10)
+    proc_executor("C:/Users/Aditya/senseimage_stuff/test", 2)

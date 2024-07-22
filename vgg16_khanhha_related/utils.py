@@ -7,7 +7,7 @@ import numpy as np
 
 import torch
 import tqdm
-from unet.unet_transfer import UNet16, UNetResNet
+from vgg16_khanhha_related.unet.unet_transfer import UNet16, UNetResNet
 
 
 class AverageMeter(object):

@@ -7,17 +7,22 @@ import torch
 import torch.nn.functional as F
 from torch.autograd import Variable
 import torchvision.transforms as transforms
-from unet.unet_transfer import UNet16, input_size
+from vgg16_khanhha_related.unet.unet_transfer import UNet16, input_size
 import matplotlib.pyplot as plt
 import argparse
 from os.path import join
 from PIL import Image
 import gc
-from utils import load_unet_vgg16, load_unet_resnet_101, load_unet_resnet_34
+from vgg16_khanhha_related.utils import load_unet_vgg16, load_unet_resnet_101, load_unet_resnet_34
 from tqdm import tqdm
 
 def evaluate_img(model, img):
     input_width, input_height = input_size[0], input_size[1]
+
+    # added by me:
+    channel_means = [0.485, 0.456, 0.406]
+    channel_stds = [0.229, 0.224, 0.225]
+    train_tfms = transforms.Compose([transforms.ToTensor(), transforms.Normalize(channel_means, channel_stds)])
 
     img_1 = cv.resize(img, (input_width, input_height), cv.INTER_AREA)
     X = train_tfms(Image.fromarray(img_1))
