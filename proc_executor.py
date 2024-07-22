@@ -146,7 +146,7 @@ def img_stitcher(img_path, splits_per_dim, dest_path, src_dim) -> None:
         mega_img.save(os.path.join(dest_path, out_img_name))
         mega_img.close()
 
-def proc_executor(src_path, split_no) -> None:
+def proc_executor(src_path, split_no, dest_path) -> None:
     '''
     This function splits, segments, and stitchs the images in the given path.
     :param src_path: A string containing the image directory path.
@@ -156,18 +156,19 @@ def proc_executor(src_path, split_no) -> None:
 
     # splitting images into temp directory
     pathified_src_path = Path(src_path)
+    pathified_dest_path = Path(dest_path)
     temp_split_path = pathified_src_path / "temp_splits"    # this is a path object, not string
     processed_temp_split_path = pathified_src_path / "processed"
     img_dim = img_splitter(img_path=src_path, splits_per_dim=split_no, dest_path=str(temp_split_path))
 
     # insert code to run the model here
     exec_inference_unet(img_dir=str(temp_split_path), model_path="./vgg16_khanhha_Related/models/model_unet_vgg_16_best.pt",
-                        model_type="vgg16", out_pred_dir=str(processed_temp_split_path))
+                        model_type="vgg16", out_pred_dir=str(processed_temp_split_path))#, threshold=threshold)
 
     # stitching images back into larger images
-    out_stitched_path = pathified_src_path / "out"  # another path object
+    #out_stitched_path = pathified_src_path / "out"  # another path object
 
-    img_stitcher(img_path=str(processed_temp_split_path), splits_per_dim=split_no, dest_path=str(out_stitched_path), src_dim=img_dim)
+    img_stitcher(img_path=str(processed_temp_split_path), splits_per_dim=split_no, dest_path=str(pathified_dest_path), src_dim=img_dim)
 
     shutil.rmtree(str(temp_split_path))
     shutil.rmtree(str(processed_temp_split_path))

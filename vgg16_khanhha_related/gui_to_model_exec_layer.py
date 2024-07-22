@@ -52,7 +52,7 @@ def evaluate_img(model, img):
 
 # defining a function to emulate the inference_unet.py cli execution command
 
-def exec_inference_unet(img_dir, model_path, model_type, out_pred_dir, threshold=0.3) -> None:
+def exec_inference_unet(img_dir, model_path, model_type, out_pred_dir) -> None:     #       , threshold=0.3) -> None:
     '''
     Emulates the inference_unet.py cli execution command. To allow the GUI to perform the same
 
@@ -99,25 +99,29 @@ def exec_inference_unet(img_dir, model_path, model_type, out_pred_dir, threshold
         prob_map_full = evaluate_img(model, img_0)
 
         # cutting off prob_map_full to threshold
-        prob_map_full[prob_map_full < threshold] = 0
+        # prob_map_full[prob_map_full < threshold] = 0
+
+        # if out_pred_dir != '':
+        #     # cv.imwrite(filename=join(out_pred_dir, f'{path.stem}.jpg'), img=(prob_map_full * 255).astype(np.uint8))
+        #     cv_img_0 = cv.cvtColor(np.array(img_0, dtype=np.uint8), cv.COLOR_RGB2BGR)
+        #     cv_prob_map_full = cv.cvtColor(np.array(prob_map_full * 255, dtype=np.uint8), cv.COLOR_RGB2BGR)
+        #     cv_prob_map_full = cv_prob_map_full[:, :] * np.array([1, 0, 1], dtype=np.uint8)
+        #     # print(cv_img_0.shape)
+        #     # print(cv_prob_map_full.shape)
+        #     # print(cv_img_0[0,0].shape)
+        #     # for i in (cv_prob_map_full[:]):
+        #     #     for j in (i[:]):
+        #     #         if np.sum(j) > 0:
+        #     #             print(j.shape)
+        #     #             print(j)
+        #     # composite_image = cv.addWeighted(cv_img_0, 0.2, cv_prob_map_full, 0.8, 0)
+        #     composite_image = cv.add(cv_img_0, cv_prob_map_full)  # saturating image, no overflow
+        #     # composite_image = cv_img_0 + cv_prob_map_full   #allowing overflow for now because of good contrast.
+        #     cv.imwrite(filename=join(out_pred_dir, f'{path.stem}.jpg'), img=composite_image)
 
         if out_pred_dir != '':
-            # cv.imwrite(filename=join(out_pred_dir, f'{path.stem}.jpg'), img=(prob_map_full * 255).astype(np.uint8))
-            cv_img_0 = cv.cvtColor(np.array(img_0, dtype=np.uint8), cv.COLOR_RGB2BGR)
             cv_prob_map_full = cv.cvtColor(np.array(prob_map_full * 255, dtype=np.uint8), cv.COLOR_RGB2BGR)
-            cv_prob_map_full = cv_prob_map_full[:, :] * np.array([1, 0, 1], dtype=np.uint8)
-            # print(cv_img_0.shape)
-            # print(cv_prob_map_full.shape)
-            # print(cv_img_0[0,0].shape)
-            # for i in (cv_prob_map_full[:]):
-            #     for j in (i[:]):
-            #         if np.sum(j) > 0:
-            #             print(j.shape)
-            #             print(j)
-            # composite_image = cv.addWeighted(cv_img_0, 0.2, cv_prob_map_full, 0.8, 0)
-            composite_image = cv.add(cv_img_0, cv_prob_map_full)  # saturating image, no overflow
-            # composite_image = cv_img_0 + cv_prob_map_full   #allowing overflow for now because of good contrast.
-            cv.imwrite(filename=join(out_pred_dir, f'{path.stem}.jpg'), img=composite_image)
+            cv.imwrite(filename=join(out_pred_dir, f'{path.stem}.jpg'), img=cv_prob_map_full)
 
         gc.collect()
 
