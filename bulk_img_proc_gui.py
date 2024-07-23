@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter.filedialog import askdirectory
 
 from proc_executor import *
+from viz_executor import *
 
 # This file contains python code for the main GUI of the bulk image processor
 
@@ -26,8 +27,10 @@ def processing_handler() -> None:
 
     if dest_path == "":
         proc_run_err_msg["text"] = "Please enter a valid input directory path"
+        return
     elif dest_path == src_path:
         proc_run_err_msg["text"] = "Please ensure the input and output directory paths are different"
+        return
 
     if split_no == "":
         proc_run_err_msg["text"] = "Please enter a valid number of image splits"
@@ -42,6 +45,50 @@ def processing_handler() -> None:
     proc_run_err_msg["text"] = ""
 
     proc_executor(src_path=src_path, split_no=split_no_int, dest_path=dest_path)
+    return
+
+def visualization_handler() -> None:
+    '''
+    Function to check label fields and step into the visualization process
+    :return: None
+    '''
+
+    # getting the data from label fields
+    img_src_path = lbl_viz_img_dir_overview_data["text"]
+    msk_src_path = lbl_viz_msk_dir_overview_data["text"]
+    out_path = lbl_viz_out_dir_overview_data["text"]
+    thresh = lbl_viz_thresh_overview_data["text"]
+    color = lbl_viz_color_overview_data["text"]
+
+    # data validity checking
+    if img_src_path == "":
+        proc_viz_run_err_msg["text"] = "Please enter a valid input image path"
+        return
+
+    if msk_src_path == "":
+        proc_viz_run_err_msg["text"] = "Please enter a valid input mask path"
+        return
+
+    if out_path == "":
+        proc_viz_run_err_msg["text"] = "Please enter a valid output path"
+        return
+    elif out_path == img_src_path or out_path == msk_src_path:
+        proc_viz_run_err_msg["text"] = "Please ensure the input and output paths are different"
+        return
+
+    if thresh == "":
+        proc_viz_run_err_msg["text"] = "Please enter a valid threshold value"
+        return
+
+    if color == "":
+        proc_viz_run_err_msg["text"] = "Please enter a valid segmentation color"
+        return
+
+    # all values OK, proceeding...
+    proc_viz_run_err_msg["text"] = ""
+
+    ft_thresh = float(thresh)
+    viz_executor(img_dir = img_src_path, msk_dir = msk_src_path, out_dir = out_path, thresh = ft_thresh, color=color)
     return
 
 def get_dir(*destinations) -> None:
@@ -113,7 +160,7 @@ def confirm_button(source, confirmer, err_field, *destinations):
 # initializing base gui window
 base_win = tk.Tk()
 base_win.title("Bulk Image Processor")
-base_win.geometry("1200x500")
+base_win.geometry("1200x750")
 
 # initializing base frame
 frm_win = tk.Frame(master=base_win, bg="skyblue")
@@ -326,13 +373,18 @@ lbl_viz_dir_info.grid(row=0, column=0, ipadx=5, ipady=5, padx=2, pady=2, sticky=
 # directory selectors
 lbl_viz_get_img_dir = tk.Label(master=frm_viz_dir, bg="white", border=3, text="Enter the image input directory: ")
 btn_viz_get_img_dir = tk.Button(master=frm_viz_dir, text="Select Directory...",
-                            command=lambda: get_dir(lbl_viz_confirm_img_dir))
+                            command=lambda: get_dir(lbl_viz_confirm_img_dir, lbl_viz_img_dir_overview_data))
 lbl_viz_confirm_img_dir = tk.Label(master=frm_viz_dir, bg="white", border=3, text="")
 
 lbl_viz_get_msk_dir = tk.Label(master=frm_viz_dir, bg="white", border=3, text="Enter the mask input directory: ")
 btn_viz_get_msk_dir = tk.Button(master=frm_viz_dir, text="Select Directory...",
-                            command=lambda: get_dir(lbl_viz_confirm_msk_dir))
+                            command=lambda: get_dir(lbl_viz_confirm_msk_dir, lbl_viz_msk_dir_overview_data))
 lbl_viz_confirm_msk_dir = tk.Label(master=frm_viz_dir, bg="white", border=3, text="")
+
+lbl_viz_get_out_dir = tk.Label(master=frm_viz_dir, bg="white", border=3, text="Enter the output directory: ")
+btn_viz_get_out_dir = tk.Button(master=frm_viz_dir, text="Select Directory...",
+                            command=lambda: get_dir(lbl_viz_confirm_out_dir, lbl_viz_out_dir_overview_data))
+lbl_viz_confirm_out_dir = tk.Label(master=frm_viz_dir, bg="white", border=3, text="")
 
 lbl_viz_get_img_dir.grid(row=1, column=0, padx=2, pady=2, sticky="nw")
 btn_viz_get_img_dir.grid(row=1, column=1, padx=2, pady=2, sticky="nw")
@@ -341,6 +393,10 @@ lbl_viz_confirm_img_dir.grid(row=1, column=2, padx=2, pady=2, sticky="nw")
 lbl_viz_get_msk_dir.grid(row=2, column=0, padx=2, pady=2, sticky="nw")
 btn_viz_get_msk_dir.grid(row=2, column=1, padx=2, pady=2, sticky="nw")
 lbl_viz_confirm_msk_dir.grid(row=2, column=2, padx=2, pady=2, sticky="nw")
+
+lbl_viz_get_out_dir.grid(row=3, column=0, padx=2, pady=2, sticky="nw")
+btn_viz_get_out_dir.grid(row=3, column=1, padx=2, pady=2, sticky="nw")
+lbl_viz_confirm_out_dir.grid(row=3, column=2, padx=2, pady=2, sticky="nw")
 
 # =========================
 # SELECT VIZ PREFEERENCES
@@ -357,7 +413,7 @@ ent_get_thresh = tk.Entry(master=frm_viz_color_etc, bg="white", width=7)
 lbl_thresh_err_msg = tk.Label(master=frm_viz_color_etc, bg="white", fg="red", border=3, text="")
 btn_thresh_confirmer = tk.Button(master=frm_viz_color_etc, text="Confirm",
                                  command= lambda: confirm_button(ent_get_thresh, confirm_prob_float,
-                                                                 lbl_thresh_err_msg))
+                                                                 lbl_thresh_err_msg, lbl_viz_thresh_overview_data))
 
 lbl_get_thresh.grid(row=1, column=0, padx=2, pady=2, sticky="nw")
 ent_get_thresh.grid(row=1, column=1, padx=2, pady=2, sticky="nw")
@@ -379,7 +435,7 @@ lbl_get_seg_color = tk.Label(master=frm_viz_color_etc, bg="white", border=3,
                              text="Enter segmentation highlight color: ")
 ddm_get_seg_color = tk.OptionMenu(frm_viz_color_etc, color_clicked, *color_options)
 btn_conf_seg_color = tk.Button(master=frm_viz_color_etc, text="Confirm",
-                               command=confirm_button(source=color_clicked, confirmer=ret_true, err_field=None))
+                        command=lambda: confirm_button(color_clicked, ret_true, None, lbl_viz_color_overview_data))
 
 lbl_get_seg_color.grid(row=2, column=0, padx=2, pady=2, sticky="nw")
 ddm_get_seg_color.grid(row=2, column=1, padx=2, pady=2, sticky="nw")
@@ -389,6 +445,49 @@ btn_conf_seg_color.grid(row=2, column=2, padx=2, pady=2, sticky="nw")
 # REVIEW AND EXECUTE
 # ==========================
 
+# heading
+lbl_viz_run_model_info = tk.Label(master=frm_viz_exec, bg="white", relief=tk.SUNKEN, text="3) Review and process images")
 
+# overview labels
+lbl_viz_run_model_warning = tk.Label(master=frm_viz_exec, bg="white", text="Please review your selections before proceeding: ")
+lbl_viz_img_dir_overview = tk.Label(master=frm_viz_exec, bg="white", text="\tInput image directory:\t")
+lbl_viz_msk_dir_overview = tk.Label(master=frm_viz_exec, bg="white", text="\tInput mask directory:\t")
+lbl_viz_out_dir_overview = tk.Label(master=frm_viz_exec, bg="white", text="\tOutput directory:\t")
+lbl_viz_thresh_overview = tk.Label(master=frm_viz_exec, bg="white", text="\tSegmentation threshold:\t")
+lbl_viz_color_overview = tk.Label(master=frm_viz_exec, bg="white", text="\tSelected color:\t")
+
+# overview data
+lbl_viz_img_dir_overview_data = tk.Label(master=frm_viz_exec, bg="white", text="")
+lbl_viz_msk_dir_overview_data = tk.Label(master=frm_viz_exec, bg="white", text="")
+lbl_viz_out_dir_overview_data = tk.Label(master=frm_viz_exec, bg="white", text="")
+lbl_viz_thresh_overview_data = tk.Label(master=frm_viz_exec, bg="white", text="")
+lbl_viz_color_overview_data = tk.Label(master=frm_viz_exec, bg="white", text="")
+# lbl_viz_thresh_no_overview_data = tk.Label(master=frm_viz_exec, bg="white", text="")
+
+btn_viz_proc_run = tk.Button(master=frm_viz_exec, bg="limegreen", text="Run", command=visualization_handler)
+proc_viz_run_err_msg = tk.Label(master=frm_viz_exec, bg="white", fg="red", text="")
+
+# adding to grid
+# heading
+lbl_viz_run_model_info.grid(row=0, column=0, ipadx=5, ipady=5, padx=2, pady=2, sticky="nw")
+
+# left labels
+lbl_viz_run_model_warning.grid(row=1, column=0, padx=2, pady=2, sticky="nw")
+lbl_viz_img_dir_overview.grid(row=2, column=0, padx=2, pady=2, sticky="nw")
+lbl_viz_msk_dir_overview.grid(row=3, column=0, padx=2, pady=2, sticky="nw")
+lbl_viz_out_dir_overview.grid(row=4, column=0, padx=2, pady=2, sticky="nw")
+lbl_viz_thresh_overview.grid(row=5, column=0, padx=2, pady=2, sticky="nw")
+lbl_viz_color_overview.grid(row=6, column=0, padx=2, pady=2, sticky="nw")
+
+# right data
+lbl_viz_img_dir_overview_data.grid(row=2, column=1, padx=2, pady=2, sticky="nw")
+lbl_viz_msk_dir_overview_data.grid(row=3, column=1, padx=2, pady=2, sticky="nw")
+lbl_viz_out_dir_overview_data.grid(row=4, column=1, padx=2, pady=2, sticky="nw")
+lbl_viz_thresh_overview_data.grid(row=5, column=1, padx=2, pady=2, sticky="nw")
+lbl_viz_color_overview_data.grid(row=6, column=1, padx=2, pady=2, sticky="nw")
+
+
+btn_viz_proc_run.grid(row=7, column=2, ipadx=10, ipady=4, padx=2, pady=2, sticky="nw")
+proc_viz_run_err_msg.grid(row=7, column=1, padx=2, pady=2, sticky="w")
 
 base_win.mainloop()
