@@ -83,6 +83,9 @@ def confirm_pos_int(inp) -> bool:
     except:
         return False
 
+def ret_true(ignore) -> bool:
+    return True
+
 def confirm_button(source, confirmer, err_field, *destinations):
     '''
     This function is meant to be used with a confirm button widget
@@ -97,9 +100,11 @@ def confirm_button(source, confirmer, err_field, *destinations):
     '''
 
     if not confirmer(source.get()):
-        err_field["text"] = "Please enter a valid input"
+        if err_field is not None:
+            err_field["text"] = "Please enter a valid input"
     else:
-        err_field["text"] = ""
+        if err_field is not None:
+            err_field["text"] = ""
         for elem in destinations:
             elem["text"] = source.get()
 
@@ -114,7 +119,7 @@ base_win.geometry("1200x500")
 frm_win = tk.Frame(master=base_win, bg="skyblue")
 frm_win.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
-frm_viz = tk.Frame(master=base_win, bg="skyblue")
+frm_viz = tk.Frame(master=base_win, bg="gold")
 frm_viz.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
 # configuring details of base frame grid
@@ -123,7 +128,8 @@ frm_win.rowconfigure(0, weight=1, minsize=30)
 frm_win.rowconfigure([1, 2, 3], weight=1, minsize=75)
 
 frm_viz.columnconfigure(0, weight=1, minsize=300)
-frm_viz.rowconfigure([0, 1, 2], weight=1, minsize=75)
+frm_viz.rowconfigure(0, weight=1, minsize=30)
+frm_viz.rowconfigure([1, 2, 3], weight=1, minsize=75)
 
 # =========================
 # Frame Win
@@ -292,11 +298,97 @@ proc_run_err_msg.grid(row=6, column=1, padx=2, pady=2, sticky="w")
 # ================================
 
 frm_viz_heading = tk.Frame(master=frm_viz, bg="white", border=3)
+frm_viz_dir = tk.Frame(master=frm_viz, bg="white", border=3)
+frm_viz_color_etc = tk.Frame(master=frm_viz, bg="white", border=3)
+frm_viz_exec = tk.Frame(master=frm_viz, bg="white", border=3)
 
 frm_viz_heading.grid(row=0, column=0, padx=5, pady=5, sticky="news")
+frm_viz_dir.grid(row=1, column=0, padx=5, pady=5, sticky="news")
+frm_viz_color_etc.grid(row=2, column=0, padx=5, pady=5, sticky="news")
+frm_viz_exec.grid(row=3, column=0, padx=5, pady=5, sticky="news")
 
+
+# ===============================
+# VIZ HEADING
+# ===============================
 lbl_viz_heading = tk.Label(master=frm_viz_heading, bg="white", relief=tk.SUNKEN, text="Visualize Images")
 
 lbl_viz_heading.pack(fill=tk.BOTH, expand=True)
+
+# ===============================
+# VIZ DIRECTORY SELECT
+# ===============================
+# heading
+lbl_viz_dir_info = tk.Label(master=frm_viz_dir, bg="white", relief=tk.SUNKEN, text="1) Enter relevant directories")
+
+lbl_viz_dir_info.grid(row=0, column=0, ipadx=5, ipady=5, padx=2, pady=2, sticky="nw")
+
+# directory selectors
+lbl_viz_get_img_dir = tk.Label(master=frm_viz_dir, bg="white", border=3, text="Enter the image input directory: ")
+btn_viz_get_img_dir = tk.Button(master=frm_viz_dir, text="Select Directory...",
+                            command=lambda: get_dir(lbl_viz_confirm_img_dir))
+lbl_viz_confirm_img_dir = tk.Label(master=frm_viz_dir, bg="white", border=3, text="")
+
+lbl_viz_get_msk_dir = tk.Label(master=frm_viz_dir, bg="white", border=3, text="Enter the mask input directory: ")
+btn_viz_get_msk_dir = tk.Button(master=frm_viz_dir, text="Select Directory...",
+                            command=lambda: get_dir(lbl_viz_confirm_msk_dir))
+lbl_viz_confirm_msk_dir = tk.Label(master=frm_viz_dir, bg="white", border=3, text="")
+
+lbl_viz_get_img_dir.grid(row=1, column=0, padx=2, pady=2, sticky="nw")
+btn_viz_get_img_dir.grid(row=1, column=1, padx=2, pady=2, sticky="nw")
+lbl_viz_confirm_img_dir.grid(row=1, column=2, padx=2, pady=2, sticky="nw")
+
+lbl_viz_get_msk_dir.grid(row=2, column=0, padx=2, pady=2, sticky="nw")
+btn_viz_get_msk_dir.grid(row=2, column=1, padx=2, pady=2, sticky="nw")
+lbl_viz_confirm_msk_dir.grid(row=2, column=2, padx=2, pady=2, sticky="nw")
+
+# =========================
+# SELECT VIZ PREFEERENCES
+# =========================
+
+lbl_viz_dir_info = tk.Label(master=frm_viz_color_etc, bg="white", relief=tk.SUNKEN,
+                            text="2) Enter vizualization preferences")
+
+lbl_viz_dir_info.grid(row=0, column=0, ipadx=5, ipady=5, padx=2, pady=2, sticky="nw")
+
+lbl_get_thresh = tk.Label(master=frm_viz_color_etc, bg="white", border=3,
+                          text="Enter the model threshold (Float between 0 and 1): ")
+ent_get_thresh = tk.Entry(master=frm_viz_color_etc, bg="white", width=7)
+lbl_thresh_err_msg = tk.Label(master=frm_viz_color_etc, bg="white", fg="red", border=3, text="")
+btn_thresh_confirmer = tk.Button(master=frm_viz_color_etc, text="Confirm",
+                                 command= lambda: confirm_button(ent_get_thresh, confirm_prob_float,
+                                                                 lbl_thresh_err_msg))
+
+lbl_get_thresh.grid(row=1, column=0, padx=2, pady=2, sticky="nw")
+ent_get_thresh.grid(row=1, column=1, padx=2, pady=2, sticky="nw")
+btn_thresh_confirmer.grid(row=1, column=2, padx=2, pady=2, sticky="nw")
+lbl_thresh_err_msg.grid(row=1, column=3, padx=2, pady=2, sticky="nw")
+
+color_options = [
+    "Red",
+    "Green",
+    "Blue",
+    "Yellow",
+    "Cyan",
+    "Pink"
+]
+
+color_clicked = tk.StringVar(master=frm_viz_color_etc, value="Red")
+
+lbl_get_seg_color = tk.Label(master=frm_viz_color_etc, bg="white", border=3,
+                             text="Enter segmentation highlight color: ")
+ddm_get_seg_color = tk.OptionMenu(frm_viz_color_etc, color_clicked, *color_options)
+btn_conf_seg_color = tk.Button(master=frm_viz_color_etc, text="Confirm",
+                               command=confirm_button(source=color_clicked, confirmer=ret_true, err_field=None))
+
+lbl_get_seg_color.grid(row=2, column=0, padx=2, pady=2, sticky="nw")
+ddm_get_seg_color.grid(row=2, column=1, padx=2, pady=2, sticky="nw")
+btn_conf_seg_color.grid(row=2, column=2, padx=2, pady=2, sticky="nw")
+
+# ==========================
+# REVIEW AND EXECUTE
+# ==========================
+
+
 
 base_win.mainloop()
