@@ -107,10 +107,11 @@ def get_dir(*destinations) -> None:
 def confirm_prob_float(inp) -> bool:
     try:
         inp_to_float = float(inp)
-        if (inp_to_float >= 0.0 and inp_to_float <= 1.0):
-            return True
-        else:
-            return False
+        # if (inp_to_float >= 0.0 and inp_to_float <= 1.0):
+        #     return True
+        # else:
+        #     return False
+        return True
     except:
         return False
 
