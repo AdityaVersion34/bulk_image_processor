@@ -27,6 +27,7 @@ from PIL import Image
 import gc
 from vgg16_khanhha_related.utils import load_unet_vgg16, load_unet_resnet_101, load_unet_resnet_34
 from tqdm import tqdm
+import tkinter as tk
 
 
 def evaluate_img(model, img):
@@ -64,6 +65,18 @@ def exec_inference_unet(img_dir, model_path, model_type, out_pred_dir) -> None: 
     :return:
     '''
 
+    # spawning a tkinter progress tracker
+    prog_win = tk.Tk()
+    prog_win.title('Image Processing Progress')
+    prog_win.geometry('250x40')
+    prog_win.resizable(False, False)
+
+    frm_prog = tk.Frame(master=prog_win, bg="red")
+    frm_prog.pack(fill=tk.BOTH, expand=True)
+
+    lbl_prog_tracker = tk.Label(master=frm_prog, bg="maroon", fg="white", text="test prog tracker")
+    lbl_prog_tracker.pack(fill=tk.BOTH, expand=True)
+
     # handles out_pred_dir
     if out_pred_dir != '':
         os.makedirs(out_pred_dir, exist_ok=True)
@@ -81,10 +94,13 @@ def exec_inference_unet(img_dir, model_path, model_type, out_pred_dir) -> None: 
     channel_stds = [0.229, 0.224, 0.225]
 
     paths = [path for path in Path(img_dir).glob('*.*')]
-    for path in tqdm(paths):
+    for idx, path in enumerate(paths):
         # print(str(path))
 
-        train_tfms = transforms.Compose([transforms.ToTensor(), transforms.Normalize(channel_means, channel_stds)])
+        prog_win.update()
+        lbl_prog_tracker["text"] = f"Generating visualizations... {idx + 1}/{len(paths)}"
+
+        #train_tfms = transforms.Compose([transforms.ToTensor(), transforms.Normalize(channel_means, channel_stds)])
 
         img_0 = Image.open(str(path))
         img_0 = np.asarray(img_0)
@@ -94,7 +110,7 @@ def exec_inference_unet(img_dir, model_path, model_type, out_pred_dir) -> None: 
 
         img_0 = img_0[:, :, :3]
 
-        img_height, img_width, img_channels = img_0.shape
+        #img_height, img_width, img_channels = img_0.shape
 
         prob_map_full = evaluate_img(model, img_0)
 
@@ -122,6 +138,9 @@ def exec_inference_unet(img_dir, model_path, model_type, out_pred_dir) -> None: 
         if out_pred_dir != '':
             cv_prob_map_full = cv.cvtColor(np.array(prob_map_full * 255, dtype=np.uint8), cv.COLOR_RGB2BGR)
             cv.imwrite(filename=join(out_pred_dir, f'{path.stem}.jpg'), img=cv_prob_map_full)
+
+        if idx == len(paths) - 1:
+            prog_win.destroy()
 
         gc.collect()
 

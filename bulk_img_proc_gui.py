@@ -163,7 +163,7 @@ def confirm_button(source, confirmer, err_field, *destinations):
 # initializing base gui window
 base_win = tk.Tk()
 base_win.title("Bulk Image Processor")
-base_win.geometry("1200x750")
+base_win.geometry("1200x550")
 
 # initializing base frame
 frm_win = tk.Frame(master=base_win, bg="skyblue")
@@ -475,6 +475,8 @@ lbl_viz_thresh_overview_data = tk.Label(master=frm_viz_exec, bg="white", text=""
 lbl_viz_color_overview_data = tk.Label(master=frm_viz_exec, bg="white", text="")
 # lbl_viz_thresh_no_overview_data = tk.Label(master=frm_viz_exec, bg="white", text="")
 
+lbl_viz_progress_status = tk.Label(master=frm_viz_exec, bg="white", text="")
+
 btn_viz_proc_run = tk.Button(master=frm_viz_exec, bg="limegreen", text="Run", command=visualization_handler)
 proc_viz_run_err_msg = tk.Label(master=frm_viz_exec, bg="white", fg="red", text="")
 
@@ -489,6 +491,7 @@ lbl_viz_msk_dir_overview.grid(row=3, column=0, padx=2, pady=2, sticky="nw")
 lbl_viz_out_dir_overview.grid(row=4, column=0, padx=2, pady=2, sticky="nw")
 lbl_viz_thresh_overview.grid(row=5, column=0, padx=2, pady=2, sticky="nw")
 lbl_viz_color_overview.grid(row=6, column=0, padx=2, pady=2, sticky="nw")
+lbl_viz_progress_status.grid(row=7, column=0, padx=2, pady=2, sticky="nw")
 
 # right data
 lbl_viz_img_dir_overview_data.grid(row=2, column=1, padx=2, pady=2, sticky="nw")
@@ -496,7 +499,6 @@ lbl_viz_msk_dir_overview_data.grid(row=3, column=1, padx=2, pady=2, sticky="nw")
 lbl_viz_out_dir_overview_data.grid(row=4, column=1, padx=2, pady=2, sticky="nw")
 lbl_viz_thresh_overview_data.grid(row=5, column=1, padx=2, pady=2, sticky="nw")
 lbl_viz_color_overview_data.grid(row=6, column=1, padx=2, pady=2, sticky="nw")
-
 
 btn_viz_proc_run.grid(row=7, column=2, ipadx=10, ipady=4, padx=2, pady=2, sticky="nw")
 proc_viz_run_err_msg.grid(row=7, column=1, padx=2, pady=2, sticky="w")

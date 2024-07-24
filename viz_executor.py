@@ -4,6 +4,7 @@ from pathlib import Path
 from tqdm import tqdm
 from PIL import Image
 from os.path import join
+import tkinter as tk
 
 def viz_executor(img_dir, msk_dir, out_dir, thresh, color, pres_transp):
     '''
@@ -16,6 +17,18 @@ def viz_executor(img_dir, msk_dir, out_dir, thresh, color, pres_transp):
     :param color: selected color for segmentation
     :return:
     '''
+
+    # spawning a tkinter progress tracker
+    prog_win = tk.Tk()
+    prog_win.title('Visualization Generation Progress')
+    prog_win.geometry('250x40')
+    prog_win.resizable(False, False)
+
+    frm_prog = tk.Frame(master=prog_win, bg="red")
+    frm_prog.pack(fill=tk.BOTH, expand=True)
+
+    lbl_prog_tracker = tk.Label(master=frm_prog, bg="maroon", fg="white", text="test prog tracker")
+    lbl_prog_tracker.pack(fill=tk.BOTH, expand=True)
 
     # creating a color-to-nparray dictionary
     color_to_arr = {
@@ -38,7 +51,11 @@ def viz_executor(img_dir, msk_dir, out_dir, thresh, color, pres_transp):
     shorter_len = len(images) if len(images) < len(masks) else len(masks)
 
     # tqdm for a cool progress bar
-    for idx in tqdm(range(shorter_len)):
+    for idx in range(shorter_len):     #tqdm(range(shorter_len), desc="Generating image visualizations... "):
+
+        prog_win.update()
+        lbl_prog_tracker["text"] = f"Generating visualizations... {idx+1}/{shorter_len}"
+
 
         img_path = images[idx]
         msk_path = masks[idx]
@@ -65,11 +82,17 @@ def viz_executor(img_dir, msk_dir, out_dir, thresh, color, pres_transp):
 
         cv.imwrite(filename=join(out_dir, f"{images[idx].stem}.jpg"), img=composite_img)
 
+        if idx == shorter_len - 1:
+            prog_win.destroy()
+
+    prog_win.mainloop()
+
     return
 
 if __name__ == '__main__':
     viz_executor(img_dir="C:/Users/Aditya/senseimage_stuff/test",
-                 msk_dir="C:/Users/Aditya/senseimage_stuff/test/mask_ops",
+                 msk_dir="C:/Users/Aditya/senseimage_stuff/test/mask_20s",
                  out_dir="C:/Users/Aditya/senseimage_stuff/test/out",
-                 thresh=20,
-                 color="Red")
+                 thresh=0,
+                 color="Pink",
+                 pres_transp=0)
