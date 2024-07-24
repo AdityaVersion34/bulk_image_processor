@@ -5,7 +5,7 @@ from tqdm import tqdm
 from PIL import Image
 from os.path import join
 
-def viz_executor(img_dir, msk_dir, out_dir, thresh, color):
+def viz_executor(img_dir, msk_dir, out_dir, thresh, color, pres_transp):
     '''
     Function to process the visualization of images
 
@@ -51,7 +51,8 @@ def viz_executor(img_dir, msk_dir, out_dir, thresh, color):
         # cutting off to threshold
         curr_msk[curr_msk < thresh] = 0
 
-        curr_msk[curr_msk > thresh] = 255
+        if pres_transp == 0:
+            curr_msk[curr_msk > thresh] = 255
 
         # converting to cv images
         cv_curr_img = cv.cvtColor(curr_img, cv.COLOR_BGR2RGB)

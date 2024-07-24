@@ -59,6 +59,7 @@ def visualization_handler() -> None:
     out_path = lbl_viz_out_dir_overview_data["text"]
     thresh = lbl_viz_thresh_overview_data["text"]
     color = lbl_viz_color_overview_data["text"]
+    yes_transp = pres_transp.get()
 
     # data validity checking
     if img_src_path == "":
@@ -88,7 +89,8 @@ def visualization_handler() -> None:
     proc_viz_run_err_msg["text"] = ""
 
     ft_thresh = float(thresh)
-    viz_executor(img_dir = img_src_path, msk_dir = msk_src_path, out_dir = out_path, thresh = ft_thresh, color=color)
+    viz_executor(img_dir = img_src_path, msk_dir = msk_src_path, out_dir = out_path, thresh = ft_thresh, color=color,
+                 pres_transp=yes_transp)
     return
 
 def get_dir(*destinations) -> None:
@@ -104,13 +106,13 @@ def get_dir(*destinations) -> None:
     for elem in destinations:
         elem["text"] = filepath
 
-def confirm_prob_float(inp) -> bool:
+def confirm_pix_int(inp) -> bool:
     try:
-        inp_to_float = float(inp)
-        # if (inp_to_float >= 0.0 and inp_to_float <= 1.0):
-        #     return True
-        # else:
-        #     return False
+        inp_to_int = int(inp)
+        if (inp_to_int >= 0 and inp_to_int <= 255):
+            return True
+        else:
+            return False
         return True
     except:
         return False
@@ -409,11 +411,11 @@ lbl_viz_dir_info = tk.Label(master=frm_viz_color_etc, bg="white", relief=tk.SUNK
 lbl_viz_dir_info.grid(row=0, column=0, ipadx=5, ipady=5, padx=2, pady=2, sticky="nw")
 
 lbl_get_thresh = tk.Label(master=frm_viz_color_etc, bg="white", border=3,
-                          text="Enter the model threshold (Float between 0 and 1): ")
+                          text="Enter the model threshold (int between 0 and 255): ")
 ent_get_thresh = tk.Entry(master=frm_viz_color_etc, bg="white", width=7)
 lbl_thresh_err_msg = tk.Label(master=frm_viz_color_etc, bg="white", fg="red", border=3, text="")
 btn_thresh_confirmer = tk.Button(master=frm_viz_color_etc, text="Confirm",
-                                 command= lambda: confirm_button(ent_get_thresh, confirm_prob_float,
+                                 command= lambda: confirm_button(ent_get_thresh, confirm_pix_int,
                                                                  lbl_thresh_err_msg, lbl_viz_thresh_overview_data))
 
 lbl_get_thresh.grid(row=1, column=0, padx=2, pady=2, sticky="nw")
@@ -441,6 +443,14 @@ btn_conf_seg_color = tk.Button(master=frm_viz_color_etc, text="Confirm",
 lbl_get_seg_color.grid(row=2, column=0, padx=2, pady=2, sticky="nw")
 ddm_get_seg_color.grid(row=2, column=1, padx=2, pady=2, sticky="nw")
 btn_conf_seg_color.grid(row=2, column=2, padx=2, pady=2, sticky="nw")
+
+# adding radio button to toggle mask transparency
+lbl_check_transp = tk.Label(master=frm_viz_color_etc, bg="white", border=3, text="Preserve mask transparency: ")
+pres_transp = tk.IntVar()
+rb_check_transp = tk.Checkbutton(master=frm_viz_color_etc, variable=pres_transp, onvalue=1, offvalue=0)
+
+lbl_check_transp.grid(row=3, column=0, padx=2, pady=2, sticky="nw")
+rb_check_transp.grid(row=3, column=1, padx=2, pady=2, sticky="nw")
 
 # ==========================
 # REVIEW AND EXECUTE
