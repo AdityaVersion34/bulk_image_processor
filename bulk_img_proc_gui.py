@@ -163,7 +163,7 @@ def confirm_button(source, confirmer, err_field, *destinations):
 # initializing base gui window
 base_win = tk.Tk()
 base_win.title("Bulk Image Processor")
-base_win.geometry("1200x550")
+base_win.geometry("1300x600")
 
 # initializing base frame
 frm_win = tk.Frame(master=base_win, bg="skyblue")
@@ -411,7 +411,7 @@ lbl_viz_dir_info = tk.Label(master=frm_viz_color_etc, bg="white", relief=tk.SUNK
 lbl_viz_dir_info.grid(row=0, column=0, ipadx=5, ipady=5, padx=2, pady=2, sticky="nw")
 
 lbl_get_thresh = tk.Label(master=frm_viz_color_etc, bg="white", border=3,
-                          text="Enter the model threshold (int between 0 and 255): ")
+                          text="Enter the mask threshold (int between 0 and 255): ")
 ent_get_thresh = tk.Entry(master=frm_viz_color_etc, bg="white", width=7)
 lbl_thresh_err_msg = tk.Label(master=frm_viz_color_etc, bg="white", fg="red", border=3, text="")
 btn_thresh_confirmer = tk.Button(master=frm_viz_color_etc, text="Confirm",
@@ -445,7 +445,7 @@ ddm_get_seg_color.grid(row=2, column=1, padx=2, pady=2, sticky="nw")
 btn_conf_seg_color.grid(row=2, column=2, padx=2, pady=2, sticky="nw")
 
 # adding radio button to toggle mask transparency
-lbl_check_transp = tk.Label(master=frm_viz_color_etc, bg="white", border=3, text="Preserve mask transparency: ")
+lbl_check_transp = tk.Label(master=frm_viz_color_etc, bg="white", border=3, text="Preserve confidence gradient: ")
 pres_transp = tk.IntVar()
 rb_check_transp = tk.Checkbutton(master=frm_viz_color_etc, variable=pres_transp, onvalue=1, offvalue=0)
 

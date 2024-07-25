@@ -98,7 +98,7 @@ def exec_inference_unet(img_dir, model_path, model_type, out_pred_dir) -> None: 
         # print(str(path))
 
         prog_win.update()
-        lbl_prog_tracker["text"] = f"Generating visualizations... {idx + 1}/{len(paths)}"
+        lbl_prog_tracker["text"] = f"Segmenting Images... {idx + 1}/{len(paths)}"
 
         #train_tfms = transforms.Compose([transforms.ToTensor(), transforms.Normalize(channel_means, channel_stds)])
 
