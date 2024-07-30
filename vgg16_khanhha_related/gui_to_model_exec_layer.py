@@ -19,13 +19,13 @@ import torch
 import torch.nn.functional as F
 from torch.autograd import Variable
 import torchvision.transforms as transforms
-from vgg16_khanhha_related.unet.unet_transfer import UNet16, input_size
+from .unet.unet_transfer import UNet16, input_size
 import matplotlib.pyplot as plt
 import argparse
 from os.path import join
 from PIL import Image
 import gc
-from vgg16_khanhha_related.utils import load_unet_vgg16, load_unet_resnet_101, load_unet_resnet_34
+from .utils import load_unet_vgg16, load_unet_resnet_101, load_unet_resnet_34
 from tqdm import tqdm
 import tkinter as tk
 
@@ -74,7 +74,7 @@ def exec_inference_unet(img_dir, model_path, model_type, out_pred_dir) -> None: 
     frm_prog = tk.Frame(master=prog_win, bg="red")
     frm_prog.pack(fill=tk.BOTH, expand=True)
 
-    lbl_prog_tracker = tk.Label(master=frm_prog, bg="maroon", fg="white", text="test prog tracker")
+    lbl_prog_tracker = tk.Label(master=frm_prog, bg="maroon", fg="white", text="Progress Tracker")
     lbl_prog_tracker.pack(fill=tk.BOTH, expand=True)
 
     # handles out_pred_dir

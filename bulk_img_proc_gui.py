@@ -1,10 +1,12 @@
-import tkinter as tk
+# import tkinter as tk
 from tkinter.filedialog import askdirectory
 
-from proc_executor import *
-from viz_executor import *
+from .proc_executor import *
+from .viz_executor import *
 
 # This file contains python code for the main GUI of the bulk image processor
+
+# print("hello world! bulk_img_proc_gui is running")
 
 def processing_handler() -> None:
     '''
@@ -113,7 +115,6 @@ def confirm_pix_int(inp) -> bool:
             return True
         else:
             return False
-        return True
     except:
         return False
 
@@ -159,6 +160,12 @@ def confirm_button(source, confirmer, err_field, *destinations):
             elem["text"] = source.get()
 
 
+# displaying if frozen or running from source
+import sys
+if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
+    print('running in a PyInstaller bundle')
+else:
+    print('running in a normal Python process')
 
 # initializing base gui window
 base_win = tk.Tk()

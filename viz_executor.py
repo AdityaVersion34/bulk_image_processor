@@ -27,7 +27,7 @@ def viz_executor(img_dir, msk_dir, out_dir, thresh, color, pres_transp):
     frm_prog = tk.Frame(master=prog_win, bg="red")
     frm_prog.pack(fill=tk.BOTH, expand=True)
 
-    lbl_prog_tracker = tk.Label(master=frm_prog, bg="maroon", fg="white", text="test prog tracker")
+    lbl_prog_tracker = tk.Label(master=frm_prog, bg="maroon", fg="white", text="Progress Tracker")
     lbl_prog_tracker.pack(fill=tk.BOTH, expand=True)
 
     # creating a color-to-nparray dictionary

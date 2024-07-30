@@ -2,7 +2,7 @@ from pathlib import Path
 import os
 from PIL import Image
 import shutil
-from vgg16_khanhha_related.gui_to_model_exec_layer import exec_inference_unet
+from .vgg16_khanhha_related.gui_to_model_exec_layer import exec_inference_unet
 import re
 
 '''
@@ -162,7 +162,7 @@ def proc_executor(src_path, split_no, dest_path) -> None:
     img_dim = img_splitter(img_path=src_path, splits_per_dim=split_no, dest_path=str(temp_split_path))
 
     # insert code to run the model here
-    exec_inference_unet(img_dir=str(temp_split_path), model_path="./vgg16_khanhha_Related/models/model_unet_vgg_16_best.pt",
+    exec_inference_unet(img_dir=str(temp_split_path), model_path="./bulk_image_processor/vgg16_khanhha_Related/models/model_unet_vgg_16_best.pt",
                         model_type="vgg16", out_pred_dir=str(processed_temp_split_path))#, threshold=threshold)
 
     # stitching images back into larger images
