@@ -63,7 +63,8 @@ def viz_executor(img_dir, msk_dir, out_dir, thresh, color, pres_transp):
         curr_img = Image.open(str(img_path))
         curr_img = np.asarray(curr_img, dtype=np.uint8)
         curr_msk = Image.open(str(msk_path))
-        curr_msk = np.asarray(curr_msk, dtype=np.uint8, copy=True)
+        curr_msk = np.asarray(curr_msk, dtype=np.uint8)#, copy=True)
+        curr_msk = np.copy(curr_msk)
 
         # cutting off to threshold
         curr_msk[curr_msk < thresh] = 0
