@@ -6,7 +6,6 @@ from .viz_executor import *
 
 # This file contains python code for the main GUI of the bulk image processor
 
-# print("hello world! bulk_img_proc_gui is running")
 
 def processing_handler() -> None:
     '''
@@ -38,12 +37,8 @@ def processing_handler() -> None:
         proc_run_err_msg["text"] = "Please enter a valid number of image splits"
         return
 
-    # if model_threshold == "":
-    #     proc_run_err_msg["text"] = "Please enter a valid model threshold"
-    #     return
-
     split_no_int = int(split_no)
-    # model_threshold_ft = float(model_threshold)
+
     proc_run_err_msg["text"] = ""
 
     proc_executor(src_path=src_path, split_no=split_no_int, dest_path=dest_path)
@@ -109,6 +104,17 @@ def get_dir(*destinations) -> None:
         elem["text"] = filepath
 
 def confirm_pix_int(inp) -> bool:
+    '''
+    This function confirms that an input is an integer between 0 and 255. Intended to check if a mask pixel is a
+    uint-8
+    Args:
+        inp: input value
+
+    Returns:
+        Boolean output
+
+    '''
+
     try:
         inp_to_int = int(inp)
         if (inp_to_int >= 0 and inp_to_int <= 255):
@@ -121,8 +127,9 @@ def confirm_pix_int(inp) -> bool:
 def confirm_pos_int(inp) -> bool:
     '''
     confirms that the parameter is a positive integer
-    :param inp:
+    :param inp: input value
     :return:
+    Boolean output
     '''
 
     try:
@@ -135,6 +142,15 @@ def confirm_pos_int(inp) -> bool:
         return False
 
 def ret_true(ignore) -> bool:
+    '''
+    Function that takes a dummy input and returns True. Made for the sake of compatibility with bulk img proc code
+    Args:
+        ignore: dummy input
+
+    Returns:
+        True
+    '''
+
     return True
 
 def confirm_button(source, confirmer, err_field, *destinations):
@@ -231,10 +247,6 @@ btn_get_out_dir = tk.Button(master=frm_get_dir, text="Select Directory...",
                             command=lambda: get_dir(lbl_confirm_out_dir, lbl_out_dir_overview_data))
 lbl_confirm_out_dir = tk.Label(master=frm_get_dir, bg="white", border=3, text="")
 
-# getting output directory
-# lbl_get_out_dir = tk.Label(master=frm_get_dir, bg="white", border=3, text="Enter the output directory: ")
-# btn_get_out_dir = tk.Button(master=frm_get_dir, text="Select Directory...", command=lambda:get_dir(lbl_confirm_out_dir))
-# lbl_confirm_out_dir = tk.Label(master=frm_get_dir, bg="white", border=3, text="")
 
 # adding everything to grid
 lbl_get_dir_info.grid(row=0, column=0, ipadx=5, ipady=5, padx=2, pady=2, sticky="nw")
@@ -247,9 +259,6 @@ lbl_get_out_dir.grid(row=2, column=0, padx=2, pady=2, sticky="nw")
 btn_get_out_dir.grid(row=2, column=1, padx=2, pady=2, sticky="nw")
 lbl_confirm_out_dir.grid(row=2, column=2, padx=2, pady=2, sticky="nw")
 
-# lbl_get_out_dir.grid(row=2, column=0, padx=2, pady=2, sticky="nw")
-# btn_get_out_dir.grid(row=2, column=1, padx=2, pady=2, sticky="nw")
-# lbl_confirm_out_dir.grid(row=2, column=2, padx=2, pady=2, sticky="nw")
 
 # ===========================================================
 # SPLIT COUNT SELECTION SECTION
@@ -264,13 +273,6 @@ btn_split_confirmer = tk.Button(master=frm_get_splits, text="Confirm",
                                 command= lambda: confirm_button(ent_get_splits, confirm_pos_int,
                                                             lbl_split_err_msg, lbl_split_no_overview_data))
 
-# lbl_get_thresh = tk.Label(master=frm_get_splits, bg="white", border=3,
-#                           text="Enter the model threshold (Float between 0 and 1): ")
-# ent_get_thresh = tk.Entry(master=frm_get_splits, bg="white", width=7)
-# lbl_thresh_err_msg = tk.Label(master=frm_get_splits, bg="white", fg="red", border=3, text="")
-# btn_thresh_confirmer = tk.Button(master=frm_get_splits, text="Confirm",
-#                                  command= lambda: confirm_button(ent_get_thresh, confirm_prob_float,
-#                                                                  lbl_thresh_err_msg, lbl_thresh_no_overview_data))
 
 # adding to grid
 lbl_get_preproc_info.grid(row=0, column=0, ipadx=5, ipady=5, padx=2, pady=2, sticky="nw")
@@ -279,11 +281,6 @@ lbl_get_splits.grid(row=1, column=0, padx=2, pady=2, sticky="nw")
 ent_get_splits.grid(row=1, column=1, padx=2, pady=2, sticky="nw")
 btn_split_confirmer.grid(row=1, column=2, padx=2, pady=2, sticky="nw")
 lbl_split_err_msg.grid(row=1, column=3, padx=2, pady=2, sticky="nw")
-
-# lbl_get_thresh.grid(row=2, column=0, padx=2, pady=2, sticky="nw")
-# ent_get_thresh.grid(row=2, column=1, padx=2, pady=2, sticky="nw")
-# btn_thresh_confirmer.grid(row=2, column=2, padx=2, pady=2, sticky="nw")
-# lbl_thresh_err_msg.grid(row=2, column=3, padx=2, pady=2, sticky="nw")
 
 
 # ===========================================================
@@ -298,14 +295,14 @@ lbl_model_overview = tk.Label(master=frm_run_model, bg="white", text="\tModel Ov
 lbl_inp_dir_overview = tk.Label(master=frm_run_model, bg="white", text="\tInput directory:\t")
 lbl_out_dir_overview = tk.Label(master=frm_run_model, bg="white", text="\tOutput directory:\t")
 lbl_split_no_overview = tk.Label(master=frm_run_model, bg="white", text="\tNumber of splits per dimension:\t")
-# lbl_thresh_no_overview = tk.Label(master=frm_run_model, bg="white", text="\tThreshold value for model:\t")
+
 
 # overview data
 lbl_model_overview_data = tk.Label(master=frm_run_model, bg="white", text="VGG16, pretrained on Khanhha's Dataset")
 lbl_inp_dir_overview_data = tk.Label(master=frm_run_model, bg="white", text="")
 lbl_out_dir_overview_data = tk.Label(master=frm_run_model, bg="white", text="")
 lbl_split_no_overview_data = tk.Label(master=frm_run_model, bg="white", text="")
-# lbl_thresh_no_overview_data = tk.Label(master=frm_run_model, bg="white", text="")
+
 
 btn_proc_run = tk.Button(master=frm_run_model, bg="limegreen", text="Run", command=processing_handler)
 proc_run_err_msg = tk.Label(master=frm_run_model, bg="white", fg="red", text="")
@@ -318,37 +315,17 @@ lbl_model_overview.grid(row=2, column=0, padx=2, pady=2, sticky="nw")
 lbl_inp_dir_overview.grid(row=3, column=0, padx=2, pady=2, sticky="nw")
 lbl_out_dir_overview.grid(row=4, column=0, padx=2, pady=2, sticky="nw")
 lbl_split_no_overview.grid(row=5, column=0, padx=2, pady=2, sticky="nw")
-# lbl_thresh_no_overview.grid(row=5, column=0, padx=2, pady=2, sticky="nw")
+
 
 lbl_model_overview_data.grid(row=2, column=1, padx=2, pady=2, sticky="nw")
 lbl_inp_dir_overview_data.grid(row=3, column=1, padx=2, pady=2, sticky="nw")
 lbl_out_dir_overview_data.grid(row=4, column=1, padx=2, pady=2, sticky="nw")
 lbl_split_no_overview_data.grid(row=5, column=1, padx=2, pady=2, sticky="nw")
-# lbl_thresh_no_overview_data.grid(row=5, column=1, padx=2, pady=2, sticky="nw")
 
 
 btn_proc_run.grid(row=6, column=2, ipadx=10, ipady=4, padx=2, pady=2, sticky="nw")
 proc_run_err_msg.grid(row=6, column=1, padx=2, pady=2, sticky="w")
 
-# ===========================================================
-# RESULTS PANEL
-
-# lbl_results_panel_info = tk.Label(master=frm_result_dir, bg="white", relief=tk.SUNKEN, text="4) Status and Results")
-#
-# lbl_results_status_heading = tk.Label(master=frm_result_dir, bg="white", text="Status: ")
-# lbl_results_status_data = tk.Label(master=frm_result_dir, bg="white", text="<===== Status Bar here =====>")
-#
-# lbl_out_dir_heading = tk.Label(master=frm_result_dir, bg="white", text="Output directory: ")
-# lbl_out_dir_data = tk.Label(master=frm_result_dir, bg="white", text="out/dir/here")
-#
-# # adding to grid
-# lbl_results_panel_info.grid(row=0, column=0, ipadx=5, ipady=5, padx=2, pady=2, sticky="nw")
-#
-# lbl_results_status_heading.grid(row=1, column=0, padx=2, pady=2, sticky="nw")
-# lbl_results_status_data.grid(row=1, column=1, padx=2, pady=2, sticky="nw")
-#
-# lbl_out_dir_heading.grid(row=2, column=0, padx=2, pady=2, sticky="nw")
-# lbl_out_dir_data.grid(row=2, column=1, padx=2, pady=2, sticky="nw")
 
 # ================================
 # Frame Viz
@@ -480,7 +457,7 @@ lbl_viz_msk_dir_overview_data = tk.Label(master=frm_viz_exec, bg="white", text="
 lbl_viz_out_dir_overview_data = tk.Label(master=frm_viz_exec, bg="white", text="")
 lbl_viz_thresh_overview_data = tk.Label(master=frm_viz_exec, bg="white", text="")
 lbl_viz_color_overview_data = tk.Label(master=frm_viz_exec, bg="white", text="")
-# lbl_viz_thresh_no_overview_data = tk.Label(master=frm_viz_exec, bg="white", text="")
+
 
 lbl_viz_progress_status = tk.Label(master=frm_viz_exec, bg="white", text="")
 

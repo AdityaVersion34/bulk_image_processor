@@ -4,6 +4,8 @@ import torch
 from torchvision import models
 import torchvision
 
+# NN utilities, again from khanhha dset code
+
 input_size = (448, 448)
 
 class Interpolate(nn.Module):

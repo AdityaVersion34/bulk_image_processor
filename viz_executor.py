@@ -50,8 +50,12 @@ def viz_executor(img_dir, msk_dir, out_dir, thresh, color, pres_transp):
     # iterate based on shorter dir
     shorter_len = len(images) if len(images) < len(masks) else len(masks)
 
+    # exit if one or more dirs is empty
+    if shorter_len == 0:
+        prog_win.destroy()
+
     # tqdm for a cool progress bar
-    for idx in range(shorter_len):     #tqdm(range(shorter_len), desc="Generating image visualizations... "):
+    for idx in range(shorter_len):
 
         prog_win.update()
         lbl_prog_tracker["text"] = f"Generating visualizations... {idx+1}/{shorter_len}"
@@ -89,11 +93,3 @@ def viz_executor(img_dir, msk_dir, out_dir, thresh, color, pres_transp):
     prog_win.mainloop()
 
     return
-
-if __name__ == '__main__':
-    viz_executor(img_dir="C:/Users/Aditya/senseimage_stuff/test",
-                 msk_dir="C:/Users/Aditya/senseimage_stuff/test/mask_20s",
-                 out_dir="C:/Users/Aditya/senseimage_stuff/test/out",
-                 thresh=0,
-                 color="Pink",
-                 pres_transp=0)

@@ -19,6 +19,8 @@ allows the user to provide a confidence cutoff, and overlay the mask on the sour
 The output images can then be used in photogrammetry.
 
 ### Dependencies
+This application only works on computers running Windows, with a NVIDIA graphics card. 
+
 If you have the bundled single-executable application file, no additional dependencies are required.
 
 If you intend to run the Python code in a normal Python process, dependencies for this application can be found in

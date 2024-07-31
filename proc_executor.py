@@ -174,12 +174,8 @@ def proc_executor(src_path, split_no, dest_path) -> None:
                         model_type="vgg16", out_pred_dir=str(processed_temp_split_path))#, threshold=threshold)
 
     # stitching images back into larger images
-    #out_stitched_path = pathified_src_path / "out"  # another path object
 
     img_stitcher(img_path=str(processed_temp_split_path), splits_per_dim=split_no, dest_path=str(pathified_dest_path), src_dim=img_dim)
 
     shutil.rmtree(str(temp_split_path))
     shutil.rmtree(str(processed_temp_split_path))
-
-if __name__ == '__main__':
-    proc_executor("C:/Users/Aditya/senseimage_stuff/test", 2)

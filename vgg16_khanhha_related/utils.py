@@ -9,6 +9,7 @@ import torch
 import tqdm
 from .unet.unet_transfer import UNet16, UNetResNet
 
+# utilities from khanhha dataset code. pretty much untouched
 
 class AverageMeter(object):
     def __init__(self):

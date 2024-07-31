@@ -16,6 +16,8 @@ import gc
 from vgg16_khanhha_related.utils import load_unet_vgg16, load_unet_resnet_101, load_unet_resnet_34
 from tqdm import tqdm
 
+# not actually used in the final application. functionality is replicated by gui_to_model_exec_layer.py
+
 def evaluate_img(model, img):
     input_width, input_height = input_size[0], input_size[1]
 

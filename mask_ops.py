@@ -9,6 +9,7 @@ from os.path import join
 from tqdm import tqdm
 
 # takes the intersection/union of two directories of masks, maskwise
+# unused in the final application, was not appropriately effective
 
 def mask_operator(dir1, dir2, out_dir) -> None:
     '''
@@ -38,20 +39,4 @@ def mask_operator(dir1, dir2, out_dir) -> None:
 
         cv_combo_mask = cv.bitwise_and(cv_mask1, cv_mask2)
 
-        # combo_mask = np.zeros(mask1.shape, dtype=mask1.dtype)
-
-        # for y in range(mask1.shape[0]):
-        #     for x in range(mask1.shape[1]):
-        #         pix1 = mask1[y, x]
-        #         pix2 = mask2[y, x]
-        #
-        #         # set as greater pixel
-        #         combo_mask[y, x] = (pix1 if pix1.all() > pix2.all() else pix2)
-
-        # cv_combo_mask = cv.cvtColor(combo_mask, cv.COLOR_RGB2BGR)
         cv.imwrite(filename=join(out_dir, f"{paths1[idx].stem}.jpg"), img=cv_combo_mask)
-
-if __name__ == '__main__':
-    mask_operator("C:/Users/Aditya/senseimage_stuff/test/mask_9s",
-                  "C:/Users/Aditya/senseimage_stuff/test/masks",
-                  "C:/Users/Aditya/senseimage_stuff/test/mask_ops")
