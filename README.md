@@ -44,5 +44,10 @@ This application is compatible with Python 3.11.9; I have not tested with other 
 ### Execution
 To run the application in a Python process, run the `__main__.py` file. The application's GUI should appear shortly.
 
+### Operation
+
+The application GUI is divided into two windows. One deals with segmentation mask generation, and the other with
+visualization. Details for the operation of each window are provided within the GUI.
+
 When using the application, ensure that all images are of the same dimensions. The application cannot currently handle
 images with varying dimensions.
