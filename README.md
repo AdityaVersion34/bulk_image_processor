@@ -2,6 +2,10 @@
  An application to streamline the bulk processing of images.
 
 ### About
+
+test image link: https://drive.google.com/drive/folders/1J1XNUwHGQuAM23ET66IDhEb0Mgg-NuOL?usp=sharing
+app link: https://drive.google.com/file/d/1XQx-nIv5bcNiQ6iurAlkbm4_Rmb3fbOZ/view?usp=sharing
+
 As provided, the Bulk Image Processor can create segmentation masks for images, and apply those masks to produce
 visualizations of those images.
 
