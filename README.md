@@ -2,6 +2,11 @@
  An application to streamline the bulk processing of images.
 
 ### About
+
+One-file executable (Google Drive): https://drive.google.com/file/d/1XQx-nIv5bcNiQ6iurAlkbm4_Rmb3fbOZ/view?usp=sharing
+
+Sample images for testing (Google Drive): https://drive.google.com/drive/folders/1J1XNUwHGQuAM23ET66IDhEb0Mgg-NuOL?usp=sharing
+
 As provided, the Bulk Image Processor can create segmentation masks for images, and apply those masks to produce
 visualizations of those images.
 
@@ -19,7 +24,9 @@ allows the user to provide a confidence cutoff, and overlay the mask on the sour
 The output images can then be used in photogrammetry.
 
 ### Dependencies
-This application only works on computers running Windows, with a NVIDIA graphics card. 
+This application only works on computers running Windows, with an NVIDIA graphics card.
+
+Ensure that your device has CUDA installed: https://developer.nvidia.com/cuda-downloads
 
 If you have the bundled single-executable application file, no additional dependencies are required.
 
@@ -36,3 +43,6 @@ This application is compatible with Python 3.11.9; I have not tested with other 
 
 ### Execution
 To run the application in a Python process, run the `__main__.py` file. The application's GUI should appear shortly.
+
+When using the application, ensure that all images are of the same dimensions. The application cannot currently handle
+images with varying dimensions.
