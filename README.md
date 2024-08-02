@@ -44,10 +44,32 @@ This application is compatible with Python 3.11.9; I have not tested with other 
 ### Execution
 To run the application in a Python process, run the `__main__.py` file. The application's GUI should appear shortly.
 
-### Operation
+### Walkthrough
+
+The contents of the zip file are as follows. The executable can be run by double-clicking on it.
+
+![](./assets/zip_contents.png)
+
+Once the exe file is run, a command terminal will appear. It is solely used for debugging information. It can be
+ignored, but do not close the window.
+
+![](./assets/debug_cli.png)
+
+The terminal may automatically install some packages. After some time, the GUI will appear:
+
+![](./assets/gui.png)
 
 The application GUI is divided into two windows. One deals with segmentation mask generation, and the other with
 visualization. Details for the operation of each window are provided within the GUI.
 
 When using the application, ensure that all images are of the same dimensions. The application cannot currently handle
 images with varying dimensions.
+
+Currently, with the DJI photogrammetry images, I have found good results by setting the number of splits as `20`, and
+the visualization threshold as `70`. Try experimenting with these values, but keep in mind that the time taken to
+produce segmentation masks increases quadratically with respect to the number of splits.
+
+As an example, here is a portion of an image segmented
+using 20 splits and with a threshold of 70, colored in red:
+
+![](./assets/result_img.jpg)
