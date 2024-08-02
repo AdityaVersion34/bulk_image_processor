@@ -60,7 +60,7 @@ The contents of the zip file are as follows. The executable can be run by double
 
 ![](./assets/zip_contents.png)
 
-Once the exe file is run, a command terminal will appear. It is solely used for debugging information. It can be
+Once the exe file is run, a terminal will appear. It is solely used for debugging information. It can be
 ignored, but do not close the window.
 
 ![](./assets/debug_cli.png)
