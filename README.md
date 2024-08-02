@@ -46,6 +46,16 @@ To run the application in a Python process, run the `__main__.py` file. The appl
 
 ### Walkthrough
 
+Before running the application, install CUDA from: https://developer.nvidia.com/cuda-downloads
+
+During the CUDA installation procedure, you can simply choose the default options with express install.
+
+You can ensure that CUDA is installed properly by opening Windows Powershell, and typing:
+`nvcc --version`. If the results returned look like this, CUDA is installed properly:
+
+![](./assets/cuda_check.png)
+
+Download the one-file executable for this application.
 The contents of the zip file are as follows. The executable can be run by double-clicking on it.
 
 ![](./assets/zip_contents.png)
